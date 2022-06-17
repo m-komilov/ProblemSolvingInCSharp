@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace TEsting
@@ -8,29 +9,37 @@ namespace TEsting
     {
         static void Main(string[] args)
         {
-            StringBuilder matnlar = new StringBuilder(
-                "Assalom 1 deganda 2 ochilar 3 deganda 4 qo'shilar hullas 5 ga 6 ni qo'shsak 7 bo'lmas haha"
-                );
-            raqam(matnlar);
-            
-
+            string path = @"MyTest.txt";
+            Lines(path);
         }
 
-        static void raqam(StringBuilder matnlar)
+        static void Lines(string path)
         {
-            StringBuilder numberMatnlari = new StringBuilder();
-
-            for (int i = 0; i < matnlar.Length; i++)
+            // pu joyda file ni ichiga malumot yozib olyabmiz atak malumoti bor file ni pathi berilsa bu shart emas
+            if (!File.Exists(path))
             {
-                if (matnlar[i] == '0' || matnlar[i] == '1' || matnlar[i] == '2' || matnlar[i] == '3' || matnlar[i] == '4' || matnlar[i] == '5' || matnlar[i] == '6' || matnlar[i] == '7' || matnlar[i] == '8' || matnlar[i] == '9')
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
                 {
-                    numberMatnlari.Append(matnlar[i].ToString());
+                    sw.WriteLine("Hello");
+                    sw.WriteLine("And");
+                    sw.WriteLine("Welcome");
                 }
             }
-            Console.WriteLine(numberMatnlari);
+
+            // Open the file to read from.
+            using (StreamReader sr = File.OpenText(path))
+            {
+                string s;
+                int i = 1;
+                while ((s = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(i + "     " + s);
+                    i++;
+                }
+            }
         }
     }
-
 }
 
 
