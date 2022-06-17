@@ -8,78 +8,76 @@ namespace TEsting
     {
         static void Main(string[] args)
         {
-            I_S result = new I_S();
-            Console.WriteLine(result.BinaryToOctal("1010"));
-            Console.WriteLine(result.BinaryToHexDecimal("101010100101010101"));
+            I_S.s_S(123);
 
         }
     }
 
-    public interface I_s
+    public static class I_S
     {
-        public int BinaryToOctal(string binary);
-        public string BinaryToHexDecimal(string binary);
-    }
-
-    public class I_S : I_s
-    {
-        public string BinaryToHexDecimal(string binary)
+        public static void s_S(int number)
         {
-            if (string.IsNullOrEmpty(binary))
-                return binary;
+            int number1 = number;
+            int number2 = number;
+            int number3 = number;
 
-            StringBuilder result = new StringBuilder(binary.Length / 8 + 1);
+            int quotient;
+            int i = 1, j;
+            char[] hexadecimalNumber = new char[100];
+            char temp1;
 
-            // TODO: check all 1's or 0's... throw otherwise
-
-            int mod4Len = binary.Length % 8;
-            if (mod4Len != 0)
+            quotient = number1;
+            while (quotient != 0)
             {
-                // pad to length multiple of 8
-                binary = binary.PadLeft(((binary.Length / 8) + 1) * 8, '0');
-            }
-
-            for (int i = 0; i < binary.Length; i += 8)
-            {
-                string eightBits = binary.Substring(i, 8);
-                result.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
-            }
-
-            return result.ToString();
-        }
-
-        public int BinaryToOctal(string binary)
-        {
-            int n1, n, p = 1;
-            int dec = 0, i = 1, j, d;
-            int ocno = 0;
-
-            n = Convert.ToInt32(binary);
-            n1 = n;
-            for (j = n; j > 0; j = j / 10)
-            {
-                d = j % 10;
-                if (i == 1)
-                    p = p * 1;
+                int temp = quotient % 16;
+                if (temp < 10)
+                    temp = temp + 48;
                 else
-                    p = p * 2;
-
-                dec = dec + (d * p);
-                i++;
+                    temp = temp + 55;
+                temp1 = Convert.ToChar(temp);
+                hexadecimalNumber[i++] = temp1;
+                quotient = quotient / 16;
             }
 
-            /*--------------------------------------------*/
-            i = 1;
+            StringBuilder value = new StringBuilder();
 
-            for (j = dec; j > 0; j = j / 8)
+            for (j = i - 1; j > 0; j--)
+                value.Append(hexadecimalNumber[j]);
+
+            Console.Write("16 lik sanoq sistemasida: ");
+            Console.WriteLine(value);
+            //********************************************************************/
+
+            string result;
+
+            result = "";
+            while (number2 > 1)
             {
-                ocno = ocno + (j % 8) * i;
-                i = i * 10;
-                n = n / 8;
+                int remainder = number2 % 2;
+                result = Convert.ToString(remainder) + result;
+                number2 /= 2;
+            }
+            result = Convert.ToString(number2) + result;
+
+            Console.Write("2 lik sanoq sistemasidagi ko'rinishi: ");
+            Console.WriteLine(result);
+
+            //***********************************************************************/
+
+            int i1, j1, octal = 0;
+            i1 = 1;
+
+            for (j1 = number3; j1 > 0; j1 = j1 / 8)
+            {
+                octal = octal + (j1 % 8) * i1;
+                i1 = i1 * 10;
+                number3 = number3 / 8;
             }
 
-            return ocno;
+            Console.Write("8 lik sanoq sistemasigagi ko'rinishi: ");
+            Console.WriteLine(octal);
         }
+
     }
 
 }
