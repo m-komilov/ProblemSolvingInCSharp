@@ -8,74 +8,78 @@ namespace TEsting
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(SanoqSistema.DecimalToBinary(200));
-            Console.WriteLine(SanoqSistema.DecimalToOctal(200));
-            Console.WriteLine(SanoqSistema.DecimalToHexDecimal(200));
+            I_S result = new I_S();
+            Console.WriteLine(result.BinaryToOctal("1010"));
+            Console.WriteLine(result.BinaryToHexDecimal("101010100101010101"));
 
         }
     }
 
-    public static class SanoqSistema
+    public interface I_s
     {
-        public static string DecimalToHexDecimal(int number)
-        {
-            int quotient;
-            int i = 1, j;
-            char[] hexadecimalNumber = new char[100];
-            char temp1;
+        public int BinaryToOctal(string binary);
+        public string BinaryToHexDecimal(string binary);
+    }
 
-            quotient = number;
-            while (quotient != 0)
+    public class I_S : I_s
+    {
+        public string BinaryToHexDecimal(string binary)
+        {
+            if (string.IsNullOrEmpty(binary))
+                return binary;
+
+            StringBuilder result = new StringBuilder(binary.Length / 8 + 1);
+
+            // TODO: check all 1's or 0's... throw otherwise
+
+            int mod4Len = binary.Length % 8;
+            if (mod4Len != 0)
             {
-                int temp = quotient % 16;
-                if (temp < 10)
-                    temp = temp + 48;
+                // pad to length multiple of 8
+                binary = binary.PadLeft(((binary.Length / 8) + 1) * 8, '0');
+            }
+
+            for (int i = 0; i < binary.Length; i += 8)
+            {
+                string eightBits = binary.Substring(i, 8);
+                result.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+            }
+
+            return result.ToString();
+        }
+
+        public int BinaryToOctal(string binary)
+        {
+            int n1, n, p = 1;
+            int dec = 0, i = 1, j, d;
+            int ocno = 0;
+
+            n = Convert.ToInt32(binary);
+            n1 = n;
+            for (j = n; j > 0; j = j / 10)
+            {
+                d = j % 10;
+                if (i == 1)
+                    p = p * 1;
                 else
-                    temp = temp + 55;
-                temp1 = Convert.ToChar(temp);
-                hexadecimalNumber[i++] = temp1;
-                quotient = quotient / 16;
+                    p = p * 2;
+
+                dec = dec + (d * p);
+                i++;
             }
 
-            StringBuilder value = new StringBuilder();
-
-            for (j = i - 1; j > 0; j--)
-                value.Append(hexadecimalNumber[j]);
-
-            return value.ToString();
-        }
-
-        public static string DecimalToBinary(int num)
-        {
-            string result;
-
-            result = "";
-            while (num > 1)
-            {
-                int remainder = num % 2;
-                result = Convert.ToString(remainder) + result;
-                num /= 2;
-            }
-            result = Convert.ToString(num) + result;
-
-            return result;
-        }
-
-        public static long DecimalToOctal(int number)
-        {
-            int i, j, octal = 0;
+            /*--------------------------------------------*/
             i = 1;
 
-            for (j = number; j > 0; j = j / 8)
+            for (j = dec; j > 0; j = j / 8)
             {
-                octal = octal + (j % 8) * i;
+                ocno = ocno + (j % 8) * i;
                 i = i * 10;
-                number = number / 8;
+                n = n / 8;
             }
 
-            return octal;
+            return ocno;
         }
-
     }
 
 }
